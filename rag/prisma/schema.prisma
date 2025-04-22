@@ -1,0 +1,29 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+model Resource {
+  id        String   @id @default(cuid()) @db.VarChar(191)
+  file      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  embeddings Embedding[]
+}
+
+model Embedding {
+  id         String                      @id @default(cuid()) @db.VarChar(191)
+  resourceId String                      @db.VarChar(191)
+  content    String
+  pageNumber Int
+  embedding  Unsupported("vector(1536)")
+
+  resource Resource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
+}

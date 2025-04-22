@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: ankane/pgvector:latest
+    environment:
+      POSTGRES_PASSWORD: password
+    ports:
+      - '54320:5432'
+    volumes:
+      - ./init-db:/docker-entrypoint-initdb.d
+
+  pg_proxy:
+    image: ghcr.io/neondatabase/wsproxy:latest
+    environment:
+      APPEND_PORT: 'postgres:5432'
+      ALLOW_ADDR_REGEX: '.*'
+      LOG_TRAFFIC: 'true'
+    ports:
+      - '54330:80'
+    depends_on:
+      - postgres
