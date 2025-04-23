@@ -3,12 +3,13 @@ import { openai } from '@ai-sdk/openai';
 import prisma from '../lib/prisma';
 import fs from 'fs/promises';
 import pdf from 'pdf-parse';
-import { homedir } from 'node:os';
 import crypto from 'node:crypto';
 import { TextContent } from 'pdfjs-dist/types/src/display/api';
 
+import { join } from 'node:path';
+
 const embeddingModel = openai.embedding('text-embedding-ada-002');
-const file = `${homedir()}/development/workshops/cloudinary/2025/cityjs-london/rag/pdf/comprehensive.pdf`;
+const file = join(__dirname, '..', 'pdf', 'comprehensive.pdf');
 
 const generateChunks = (
   text: string,
